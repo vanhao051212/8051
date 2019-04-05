@@ -5,20 +5,22 @@
 
 
 
-ORG 00H
-ACALL INTI
+ORG 0000H
+LJMP INIT
 
-	
+ORG 0003H						; START INT 0
+LJMP ISRINT0	
 
+ORG 0013H						; START INT 1
+LJMP ISRINT1
 
-
-
-LJMP MAIN
 
 ORG 30H
 	
+
 	MAIN:
-		ACALL TIMING
+		
+	ACALL TIMING
 		
 		
 	JMP MAIN
@@ -63,15 +65,19 @@ ORG 30H
 	
 	;INIT *****************************************************************************
 	
-	INTI:
-	;MOV IE,#85H			; ENABLE INT1, INT0
+	INIT:
+	MOV IE,#85H			; ENABLE INT1, INT0
 	MOV P1,#0			
 	MOV P2,#0			
 	MOV TMOD,#10H		; TIMER 1 MODE 1
-	;ACALL TIMING
+	SETB IT0
+	SETB IT1
+	MOV 08H,#0			; FLAG FOR RST
+	MOV 09H,#0			; FLAG FOR PAUSE/RESUME
 	RST:
 	MOV R1,#00 			; STORE SEC
 	MOV R2,#00			; STORE %SEC
+	JMP MAIN
 	RET
 	;----------------------------------------------------------------------------------
 	
@@ -137,6 +143,23 @@ ORG 30H
 	RET
 	;-------------------------------------------------------------------------------------
 	
+	
+	; INT 0 ******************************************************************************
+	ISRINT0:	
+	CPL P3.7
+	RETI
+	;-------------------------------------------------------------------------------------
+	
+	; INT1  /RESET ***********************************************************************
+	ISRINT1:
+	MOV R1,#00 			; STORE SEC
+	MOV R2,#00			; STORE %SEC	
+	RETI
+	
+	
+	
+	
+	;-------------------------------------------------------------------------------------
 	
 END
 	
