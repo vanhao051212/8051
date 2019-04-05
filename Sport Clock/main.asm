@@ -31,7 +31,8 @@ ORG 30H
 	LOOP_SEC:
 	LOOP_SEC1:
 	ACALL DISPLAY					; DISPLAY LED
-	
+	MOV A,09H
+	CJNE A,#0,LOOP_SEC1
 	MOV TH1,#0D8H
 	MOV TL1,#0EFH
 	SETB TR1						; START TIMER 1
@@ -72,7 +73,6 @@ ORG 30H
 	MOV TMOD,#10H		; TIMER 1 MODE 1
 	SETB IT0
 	SETB IT1
-	MOV 08H,#0			; FLAG FOR RST
 	MOV 09H,#0			; FLAG FOR PAUSE/RESUME
 	RST:
 	MOV R1,#00 			; STORE SEC
@@ -145,8 +145,10 @@ ORG 30H
 	
 	
 	; INT 0 ******************************************************************************
-	ISRINT0:	
-	CPL P3.7
+	ISRINT0:
+	MOV A, 09H
+	XRL A,#1
+	MOV 09H,A
 	RETI
 	;-------------------------------------------------------------------------------------
 	
