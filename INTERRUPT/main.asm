@@ -59,7 +59,7 @@ ORG 0030H
 	CLR P1.1
 	MOV R0,#0				; FLAG == 0 DO NOTHING
 	MOV TMOD,#23H			;  TIMER 0 MODE 3, TIMER 1 SET BAUD 
-	MOV IE,#84H 			; EA=1, IE
+	MOV IE,#94H 			; EA=1, IE
 	MOV SCON , #50H
 	MOV TH1,#-13			; SET BAUD
 	SETB TR1
@@ -80,18 +80,23 @@ ORG 0030H
 	; TRANSMIT UART *********************************************************************
 	ISRUART:
 	
-	JB TI, TRUYEN			; IF TI = 1 THEN SEND
+	JB TI, SEND			; IF TI = 1 THEN SEND
 	RETI
 	
-	TRUYEN:
-	MOV SBUF,#"H"
-	ACALL DELAY
-	MOV SBUF,#"A"
-	ACALL DELAY
-	MOV SBUF,#"O"
-	ACALL DELAY
+	SEND:
+	MOV A,#"H"
+	ACALL TRUYEN
+	MOV A,#"A"
+	ACALL TRUYEN
+	MOV A,#"O"
+	ACALL TRUYEN
 	
 	RETI
+	
+	TRUYEN: MOV SBUF, A
+	WAIT: JNB TI, WAIT
+	CLR TI
+	RET
 	; -----------------------------------------------------------------------------------
 	
 
