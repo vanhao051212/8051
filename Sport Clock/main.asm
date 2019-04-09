@@ -30,9 +30,15 @@ ORG 30H
 	
 	LOOP_SEC:
 	LOOP_SEC1:
+	ACALL CHECKBUTTON
+	MOV A, R1
+	ADD A, 10H
+	MOV R1, A
+	MOV 10H,#0
 	ACALL DISPLAY					; DISPLAY LED
 	MOV A,09H
 	CJNE A,#0,LOOP_SEC1
+	
 	MOV TH1,#0D8H
 	MOV TL1,#0EFH
 	SETB TR1						; START TIMER 1
@@ -49,10 +55,10 @@ ORG 30H
 	CJNE R2,#100, LOOP_SEC1			; LOOP UNTIL %SEC = 100
 	
 	; IF %SEC = 100, RESET %SEC, SEC ++
-	
-	MOV A,R1
-	ADDC A,#1						
-	MOV R1,A						; SEC ++
+	ACALL INCSEC
+	;MOV A,R1
+	;ADDC A,#1						
+	;MOV R1,A						; SEC ++
 	MOV R2,#0						; RESET %SEC
 	CJNE R1,#100, LOOP_SEC			; LOOP UBTIL SEC =100
 	; IF SEC = 100	RESET ALL
@@ -67,12 +73,16 @@ ORG 30H
 	;INIT *****************************************************************************
 	
 	INIT:
+	
 	MOV IE,#85H			; ENABLE INT1, INT0
 	MOV P1,#0			
 	MOV P2,#0			
+	SETB P1.6
+	SETB P1.7
 	MOV TMOD,#10H		; TIMER 1 MODE 1
 	SETB IT0
 	SETB IT1
+	MOV 10H,#0			; FLAG FOR INC OR DEC SEC
 	MOV 09H,#0			; FLAG FOR PAUSE/RESUME
 	RST:
 	MOV R1,#00 			; STORE SEC
@@ -94,7 +104,7 @@ ORG 30H
 	DISPLAY:
 	ACALL TACHSO
 
-	MOV P1,#0
+	;MOV P1,#0
 	
 	SETB P1.4
 	MOV P2,R3
@@ -144,7 +154,7 @@ ORG 30H
 	;-------------------------------------------------------------------------------------
 	
 	
-	; INT 0 ******************************************************************************
+	; INT 0 / PAUSE/RESUME ***************************************************************
 	ISRINT0:
 	MOV A, 09H
 	XRL A,#1
@@ -158,11 +168,44 @@ ORG 30H
 	MOV R2,#00			; STORE %SEC	
 	RETI
 	
+	;-------------------------------------------------------------------------------------
 	
-	
+	; CHECK BUTTON ***********************************************************************
+	CHECKBUTTON:
+	JNB P1.6, INCSEC
+	JNB	P1.7, DECSEC
+	RET
 	
 	;-------------------------------------------------------------------------------------
 	
+	; INC SEC ****************************************************************************
+	INCSEC:
+	JNB P1.6, INCSEC
+	MOV A,10H
+	ADD A,#1						
+	MOV 10H,A
+	RET
+		
+	;-------------------------------------------------------------------------------------
+	
+	; DEC SEC ****************************************************************************
+	DECSEC:
+	JNB	P1.7, DECSEC
+	MOV A,10H
+	CLR C
+	SUBB A,#1
+	MOV 10H,A
+	RET
+	
+	;-------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 END
 	
 	
