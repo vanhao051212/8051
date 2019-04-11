@@ -64,7 +64,7 @@ ORG 0030H
 
 	; RESET ALL*********************************************************
 	RESET:
-	MOV R1,#0				; RESET EVERY 1S WHEN R1=21
+	MOV R1,#0				; RESET EVERY 1S WHEN R1=20
 	MOV R0,#0
 	RET
 
@@ -73,10 +73,7 @@ ORG 0030H
 	
 	; CACULATOR FUNCTION ***********************************************
 	CACULATOR:
-	CJNE R1,#20,RETURN				; IF R1 != 21, WAIT FOR 1S
-	;MOV A,R0
-	;MOV R6,A
-	; IF R1 == 21
+	CJNE R1,#20,RETURN				; IF R1 != 20, WAIT FOR 1S
 	MOV A,R0
 	MOV B, #20
 	DIV AB
