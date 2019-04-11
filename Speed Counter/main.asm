@@ -18,26 +18,26 @@ ORG 0023H			; UART			RI/TI
 
 
 ORG 0030H
+	
+	;===================================================================
+	; MAIN FUNCTION ****************************************************
 	MAIN:
 		ACALL  CACULATOR
 		ACALL  DISPLAY
-	
-	
-	
 	LJMP MAIN
-	
-	
+	;===================================================================
+	;===================================================================
 	
 	
 	;INIT FUNCTION *****************************************************
 	INIT:
-	MOV TMOD,#10H					; TIMER 1 MODE 1 16BIT
-	MOV IE,#10001100B				; TIMER 1 INTERRUPT, INT 1
-	MOV R0,#0						; FLAG INTERRUPT
-	MOV R1,#0						; TIME COUNTER EVERY 50MS
-	SETB TR1						; START TIMER 1
-	SETB TF1						; START INTERRUPT TIMER
-	SETB IT1						; START EXTERNAL INTERRUPT INT1 
+	MOV TMOD,#10H			; TIMER 1 MODE 1 16BIT
+	MOV IE,#10001100B		; TIMER 1 INTERRUPT, INT 1
+	MOV R0,#0			; FLAG INTERRUPT
+	MOV R1,#0			; TIME COUNTER EVERY 50MS
+	SETB TR1			; START TIMER 1
+	SETB TF1			; START INTERRUPT TIMER
+	SETB IT1			; START EXTERNAL INTERRUPT INT1 
 	
 	LJMP MAIN
 	RET
@@ -64,7 +64,7 @@ ORG 0030H
 
 	; RESET ALL*********************************************************
 	RESET:
-	MOV R1,#0				; RESET EVERY 1S WHEN R1=20
+	MOV R1,#0			; RESET EVERY 1S WHEN R1=20
 	MOV R0,#0
 	RET
 
@@ -73,16 +73,16 @@ ORG 0030H
 	
 	; CACULATOR FUNCTION ***********************************************
 	CACULATOR:
-	CJNE R1,#20,RETURN				; IF R1 != 20, WAIT FOR 1S
+	CJNE R1,#20,RETURN		; IF R1 != 20, WAIT FOR 1S
 	MOV A,R0
 	MOV B, #20
 	DIV AB
-	MOV R2,A						; R2 STORE SPEED
+	MOV R2,A			; R2 STORE SPEED
 	MOV A, B
 	MOV B,#10
-	MUL AB							; A: LSB --- B: MSB
+	MUL AB				; A: LSB --- B: MSB
 	ORL A,B
-	MOV R3,A						; 
+	MOV R3,A						 
 	ACALL RESET
 	RETURN:
 	
@@ -118,23 +118,23 @@ ORG 0030H
 	ACALL TACHSO
 	SETB P1.4
 	MOV P2,#0
-	SETB P1.0							; DISPLAY LED 1
+	SETB P1.0			; DISPLAY LED 1
 	ACALL DELAY
 	CLR P1.0
 	
 	MOV P2,R3
-	SETB P1.1							; DISPLAY LED 2
+	SETB P1.1			; DISPLAY LED 2
 	ACALL DELAY
 	CLR P1.1
 
 	
 	MOV P2,R4
-	SETB P1.2							; DISPLAY LED 3
+	SETB P1.2			; DISPLAY LED 3
 	ACALL DELAY
 	CLR P1.2
 
 	MOV P2,R5
-	SETB P1.3							; DISPLAY LED 4
+	SETB P1.3			; DISPLAY LED 4
 	ACALL DELAY
 	CLR P1.3
 	
