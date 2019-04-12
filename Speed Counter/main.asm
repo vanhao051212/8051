@@ -82,7 +82,9 @@ ORG 0030H
 	MOV B,#10
 	MUL AB				; A: LSB --- B: MSB
 	ORL A,B
-	MOV R3,A						 
+	MOV B,#20
+	DIV AB
+	MOV R6,A						 
 	ACALL RESET
 	RETURN:
 	
@@ -117,23 +119,29 @@ ORG 0030H
 	DISPLAY:
 	ACALL TACHSO
 	SETB P1.4
-	MOV P2,#0
+	MOV P2,R3
 	SETB P1.0			; DISPLAY LED 1
 	ACALL DELAY
 	CLR P1.0
 	
-	MOV P2,R3
+	MOV P2,R4
 	SETB P1.1			; DISPLAY LED 2
 	ACALL DELAY
 	CLR P1.1
 
 	
-	MOV P2,R4
+	MOV P2,R5
 	SETB P1.2			; DISPLAY LED 3
 	ACALL DELAY
 	CLR P1.2
-
-	MOV P2,R5
+	
+	SETB P1.2
+	CLR P1.4			; DISPLAY DP
+	ACALL DELAY
+	CLR P1.2
+	SETB P1.4
+	
+	MOV P2,R6
 	SETB P1.3			; DISPLAY LED 4
 	ACALL DELAY
 	CLR P1.3
@@ -149,4 +157,3 @@ END
 	; **********************************************************
 
 	;===================================================================
-	
