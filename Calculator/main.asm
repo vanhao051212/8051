@@ -33,9 +33,9 @@ ORG 0023H			; UART			RI/TI
 ORG 100H
 	; MAIN ===========================================================
 	;===============================================================;;
-	MAIN:															;;
-	ACALL CHECK_KEYPAD												;;
-	LJMP MAIN														;;
+	MAIN:								;;
+	ACALL CHECK_KEYPAD						;;
+	LJMP MAIN							;;
 	;===============================================================;;
 	;=================================================================
 	
@@ -101,7 +101,7 @@ ORG 100H
 	CHECK_DIV:
 	CJNE A,#07H,CHECK_ROW1
 	DDD:JNB COL3,DDD
-	MOV FLAG,#1					; ANNOUNCE THAT IS LAST VALUE
+	MOV FLAG,#1				; ANNOUNCE THAT IS LAST VALUE
 	MOV STT,#1
 	MOV CAL,#4
 	MOV BUFFER,#"/"				;/
@@ -126,7 +126,7 @@ ORG 100H
 	ACALL SEND
 	JMP COUNTINUTE
 	CHECK6:
-	CJNE A,#0BH,CHECK_MUL		; 6
+	CJNE A,#0BH,CHECK_MUL			; 6
 	GGG:JNB COL2,GGG
 	MOV TEMP,#6
 	ACALL UPDATE_DATA
@@ -136,7 +136,7 @@ ORG 100H
 	CHECK_MUL:
 	CJNE A,#07H,CHECK_ROW2
 	HHH:JNB COL3,HHH
-	MOV FLAG,#1					; ANNOUNCE THAT IS LAST VALUE
+	MOV FLAG,#1				; ANNOUNCE THAT IS LAST VALUE
 	MOV STT,#1
 	MOV CAL,#3
 	MOV BUFFER,#"*"				;*
@@ -161,7 +161,7 @@ ORG 100H
 	ACALL SEND
 	JMP COUNTINUTE
 	CHECK3:
-	CJNE A,#0BH,CHECK_SUB		; 3
+	CJNE A,#0BH,CHECK_SUB			; 3
 	KKK:JNB COL2,KKK
 	MOV TEMP,#3
 	ACALL UPDATE_DATA
@@ -171,7 +171,7 @@ ORG 100H
 	CHECK_SUB:
 	CJNE A,#07H,CHECK_ROW3
 	LLL:JNB COL3,LLL
-	MOV FLAG,#1					; ANNOUNCE THAT IS LAST VALUE
+	MOV FLAG,#1				; ANNOUNCE THAT IS LAST VALUE
 	MOV STT,#1
 	MOV CAL,#2
 	MOV BUFFER,#"-"				;-
@@ -184,10 +184,9 @@ ORG 100H
 	MMM:JNB COL0,MMM
 	ACALL RESET
 	ACALL LCD_CLEAR
-	; DO STH	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	JMP COUNTINUTE
 	CHECK0:
-	CJNE A,#0DH,CHECK_EQUAL		; 0
+	CJNE A,#0DH,CHECK_EQUAL			; 0
 	NNN:JNB COL1,NNN
 	MOV TEMP,#0
 	ACALL UPDATE_DATA
@@ -195,11 +194,10 @@ ORG 100H
 	ACALL SEND
 	JMP COUNTINUTE
 	CHECK_EQUAL:
-	CJNE A,#0BH,CHECK_ADD		; =
+	CJNE A,#0BH,CHECK_ADD			; =
 	OOO: JNB COL2,OOO
 	MOV BUFFER,#"="
 	ACALL SEND	
-	; DO STH	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	ACALL CALCULATE
 	ACALL DISPLAY
 	;ACALL RESET
