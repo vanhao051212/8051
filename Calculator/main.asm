@@ -284,8 +284,8 @@ ORG 100H
 	JMP DO
 	SUB:
 	CJNE A,#2,MULT
-	MOV A,FIRST_VALUE
-	SUBB A,LAST_VALUE
+	ACALL SUBTRACT
+	
 	JMP DO
 	MULT:
 	CJNE A,#3,DIVIDE
@@ -379,6 +379,33 @@ ORG 100H
 	ACALL SEND
 	MOV BUFFER,#1
 	ACALL SEND
+	RET
+	; ================================================================
+	
+	; SUBTRACT *******************************************************
+	SUBTRACT:
+	
+	MOV A, FIRST_VALUE
+	MOV B, LAST_VALUE
+	CJNE A, B, NOT_EQL
+ 	 
+	NOT_EQL:	JC A_LESS
+	 
+	A_GREATER:	;A > B
+		MOV A,FIRST_VALUE
+		SUBB A,LAST_VALUE
+		SJMP END_CMP
+	 
+	A_LESS:		;A < B
+		MOV BUFFER,#"-"
+		ACALL SEND
+		MOV A, LAST_VALUE
+		SUBB A,FIRST_VALUE
+		ADD A,#1
+
+	END_CMP:
+
+
 	RET
 	; ================================================================
 END
