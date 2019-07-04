@@ -79,20 +79,12 @@ ORG 0030H
 	
 	; TRANSMIT UART *********************************************************************
 	ISRUART:
-	
 	JB TI, SEND			; IF TI = 1 THEN SEND
 	RETI
-	
 	SEND:
 	MOV A,#"A"
-	ACALL TRUYEN
-	MOV A,#"A"
-	ACALL TRUYEN
-	MOV A,#"A"
-	ACALL TRUYEN
-	
+	ACALL TRUYEN	
 	RETI
-	
 	TRUYEN: MOV SBUF, A
 	WAIT: JNB TI, WAIT
 	CLR TI
